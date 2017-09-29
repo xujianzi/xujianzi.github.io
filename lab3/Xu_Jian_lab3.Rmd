@@ -2,8 +2,12 @@
 title: "Xu_Jian_lab3"
 author: "Jian Xu"
 date: "9/28/2017"
-output: html_document
-
+output:
+  html_notebook:
+    toc: yes
+    toc_float: yes
+  html_document:
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -80,12 +84,12 @@ title(main = list("The Cumulative Possibility", col ="red", font = 3))
 
 ## Question 4 use Poisson Distribution
 ### Part 1
-##### Exactly four cars arriving in ten seconds
+#### Exactly four cars arriving in ten seconds
 ```{r}
 dpois(4, lambda = 5)
 ```
 ### Part 2 
-##### More than five cars arriving in ten seconds
+#### More than five cars arriving in ten seconds
 ```{r}
 ppois(5, lambda = 5, lower.tail = F)
 ```
@@ -98,6 +102,11 @@ plot(Ncar, P_car, type = "b", pch = 16, col = "red")
 title(main = list("The Possibility of Numbers of arriving cars", 
                   col = "red", font = 3))
 ```
+
+
+
+
+
 
 
 
