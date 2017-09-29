@@ -2,7 +2,10 @@
 title: "Xu_Jian_lab3"
 author: "Jian Xu"
 date: "9/28/2017"
-output: html_document
+output: 
+  html_notebook:
+    toc: TRUE
+    toc_float: TRUE
 ---
 
 ```{r setup, include=FALSE}
@@ -78,17 +81,17 @@ title(main = list("The Cumulative Possibility", col ="red", font = 3))
 ```
 
 ## Question 4 use Poisson Distribution
-#### Part 1
+### Part 1
 ##### Exactly four cars arriving in ten seconds
 ```{r}
 dpois(4, lambda = 5)
 ```
-#### Part 2 
+### Part 2 
 ##### More than five cars arriving in ten seconds
 ```{r}
 ppois(5, lambda = 5, lower.tail = F)
 ```
-#### Part 3
+### Part 3
 ```{r}
 Ncar_max <- 20
 Ncar <- 0:Ncar_max
@@ -98,10 +101,5 @@ title(main = list("The Possibility of Numbers of arriving cars",
                   col = "red", font = 3))
 ```
 
-
-
-
-
-## R Markdown
 
 
