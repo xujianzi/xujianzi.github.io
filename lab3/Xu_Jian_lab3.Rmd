@@ -1,0 +1,107 @@
+---
+title: "Xu_Jian_lab3"
+author: "Jian Xu"
+date: "9/28/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Question 1
+### Part 1 
+#### Randomly select 40 cars as one dataset and remaining as the other dataset
+```{r}
+library(MASS)
+df_lab3 <- Cars93
+index <- nrow(df_lab3)
+set.seed(100)
+training <- sample(1:index, size = 40, replace = FALSE)
+whole <- as.numeric(row.names(df_lab3)) 
+remain <- whole[-training]
+df_t <- df_lab3[training,]
+df_r <- df_lab3[remain,]
+write.csv(df_t, file = "df_t.csv")
+write.csv(df_r, file = "df_r.csv")
+```
+### Part 2
+#### Find the number of USA and non-USA cars in the training dataset
+```{r}
+USA_cars <- df_t[df_t$Origin == "USA",]
+Num_USA <- nrow(USA_cars)
+non_USA_cas <- df_t[df_t$Origin == "non-USA",]
+Num_non_USA <- nrow(non_USA_cas)
+result_1_2 <-cbind(Num_USA, Num_non_USA)
+rownames(result_1_2) <- "Numbers"
+result_1_2
+```
+## Question 2
+```{r}
+set.seed(210)
+S_trial <- sample(c("boy","girl"), size = 10, replace = T, prob = c(0.515, 0.485))
+set.seed(210000)
+L_trial <- sample(c("boy","girl"), size = 10000, replace = T, prob = c(0.515, 0.485))
+result_2 <- cbind(table(S_trial), table(L_trial))
+colnames(result_2) <- c("small_trial", "large_trial")
+result_2
+```
+
+## Question 3 use Binomial Distribution
+### Part 1 
+#### Density function ##boy=X  P(X = 3)
+```{r}
+dbinom(3, size = 10, prob = 0.515)
+```
+### Part 2
+#### Distribution fuction ## P(X >= 8) 
+It can translated to caculate the girls'
+```{r}
+g_p2 <- pbinom(2, size = 10, prob = 0.485)
+g_p2
+```
+### Part 3
+#### Density function plot
+```{r}
+n <- 10
+x <- 0:n
+y <- dbinom(x, size = 10, prob = 0.515)
+plot(x, y, type ="b", pch = 16, col="blue")
+title(main = list("The Possibility of Numbers of boys in 10 births", col = "red", font = 3))
+```
+#### Cumulative probability function plot
+```{r}
+n <- 10
+x <- 0:n
+y <- pbinom(x, 10, prob = 0.515)
+plot(x, y, type = "b", pch = 16, col = "green")
+title(main = list("The Cumulative Possibility", col ="red", font = 3))
+```
+
+## Question 4 use Poisson Distribution
+#### Part 1
+##### Exactly four cars arriving in ten seconds
+```{r}
+dpois(4, lambda = 5)
+```
+#### Part 2 
+##### More than five cars arriving in ten seconds
+```{r}
+ppois(5, lambda = 5, lower.tail = F)
+```
+#### Part 3
+```{r}
+Ncar_max <- 20
+Ncar <- 0:Ncar_max
+P_car <- dpois(Ncar, lambda = 5)
+plot(Ncar, P_car, type = "b", pch = 16, col = "red")
+title(main = list("The Possibility of Numbers of arriving cars", 
+                  col = "red", font = 3))
+```
+
+
+
+
+
+## R Markdown
+
+
