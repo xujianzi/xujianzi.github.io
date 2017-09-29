@@ -2,10 +2,12 @@
 title: "Xu_Jian_lab3"
 author: "Jian Xu"
 date: "9/28/2017"
-output: 
+output:
+  html_document:
+    toc: yes
   html_notebook:
-    toc: TRUE
-    toc_float: TRUE
+    toc: yes
+    toc_float: yes
 ---
 
 ```{r setup, include=FALSE}
