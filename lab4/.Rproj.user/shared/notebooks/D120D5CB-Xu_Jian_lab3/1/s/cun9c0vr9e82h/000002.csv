@@ -1,0 +1,7 @@
+"0","```r
+n <- 10
+x <- 0:n
+y <- dbinom(x, size = 10, prob = 0.515)
+plot(x, y, type =\"b\", pch = 16, col=\"blue\")
+title(main = list(\"The Possibility of Numbers of boys in 10 births\", col = \"red\", font = 3))
+```"

@@ -1,0 +1,7 @@
+"0","```r
+n <- 10
+x <- 0:n
+y <- pbinom(x, 10, prob = 0.515)
+plot(x, y, type = \"b\", pch = 16, col = \"green\")
+title(main = list(\"The Cumulative Possibility\", col =\"red\", font = 3))
+```"

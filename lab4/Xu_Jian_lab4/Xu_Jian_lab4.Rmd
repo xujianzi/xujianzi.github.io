@@ -1,0 +1,169 @@
+---
+title: "Xu_jian_lab4"
+author: "Jian Xu"
+date: "October 5, 2017"
+output: 
+  html_notebook:
+    toc: yes
+    toc_float: yes
+  html_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Question 1
+### Part a
+```{r}
+answer_1_a <- pnorm(20, 32, 7) + dnorm(20, 32, 7)
+print(answer_1_a)
+```
+The answer is **0.05635001** 
+
+Plot the density function
+```{r}
+cord.x <- c(11, seq(11, 20, 0.01), 20)
+cord.y <- c(0,dnorm(seq(11, 20, 0.01), 32,7),0)
+curve(dnorm(x, 32, 7), xlim = c(11, 53), 
+      main = "A team scoring 20 points or fewer")
+polygon(cord.x, cord.y, col = "red")
+```
+
+### Part b
+```{r}
+answer_1_b <- pnorm(35, 32, 7, lower.tail = F)
+print(answer_1_b)
+```
+The answer is **0.3341176** 
+
+Plot the density function
+```{r}
+cord.x <- c(35, seq(35,53,0.01), 53)
+cord.y <- c(0, dnorm(seq(35, 53, 0.01), 32, 7), 0)
+curve(dnorm(x, 32, 7), xlim = c(11, 53), 
+      main = "A team scoring more than 35 points")
+polygon(cord.x, cord.y, col = "blue")
+```
+
+### Part c
+```{r}
+answer_1_c <- pnorm(40,32,7) - pnorm(20, 32, 7)
+print(answer_1_c)
+```
+The answer is **0.8302129** 
+
+Plot the density function
+```{r}
+cord.x <- c(20, seq(20,40,0.01), 40)
+cord.y <- c(0, dnorm(seq(20, 40, 0.01), 32, 7), 0)
+curve(dnorm(x, 32, 7), xlim = c(11, 53), 
+      main = "A team scoring between 20 and 40 points")
+polygon(cord.x, cord.y, col = "yellow")
+```
+
+
+## Question 2
+### Part a
+```{r}
+answer_2_a <- pexp(3,0.1)
+print(answer_2_a)
+```
+The answer is **0.2591818**
+
+Plot the density function
+```{r}
+curve(dexp(x,0.1), xlim = c(0, 50), lwd = 2,
+      main = "Fewer than 3 comments")
+cord.x <- c(0, seq(0, 3, 0.01), 3)
+cord.y <- c(0,dexp(seq(0,3,0.01), 0.1),0)
+polygon(cord.x, cord.y, col = "purple")
+```
+
+### Part b
+```{r}
+answer_2_b <- pexp(20,0.1,F)
+print(answer_2_b)
+```
+The answer is **0.1353353**
+
+Plot the density function
+```{r}
+curve(dexp(x,0.1), xlim = c(0, 50), lwd = 2,
+      main = "More than 20 comments")
+cord.x <- c(20, seq(20, 50, 0.01), 50)
+cord.y <- c(0,dexp(seq(20,50,0.01), 0.1),0)
+polygon(cord.x, cord.y, col = "pink")
+```
+
+### Part c
+```{r}
+answer_2_c <- pexp(10, 0.1) - pexp(5, 0.1)
+print(answer_2_c)
+```
+The answer is **0.2386512**
+
+Plot the density function
+```{r}
+curve(dexp(x,0.1), xlim = c(0, 50), lwd = 2,
+      main = "Between 5 and 10 comments")
+cord.x <- c(5, seq(5, 10, 0.01), 10)
+cord.y <- c(0,dexp(seq(5,10,0.01), 0.1),0)
+polygon(cord.x, cord.y, col = "black")
+```
+
+
+## Question 3
+```{r, message=FALSE, warning=FALSE}
+library(raster)
+```
+### Part a
+30*30 raster based on random values from uniform distribution
+```{r}
+ras <- raster(nrows = 30, ncols = 30, xmn = 0,
+              xmx = 30, ymn = 0, ymx = 30)
+ras 
+set.seed(100)
+ras[] <- runif(ncell(ras))
+plot(ras)
+hist(ras)
+```
+
+### Part b
+30*30 raster based on random values from normal distribution
+```{r}
+ras2 <- raster(nrows = 30, ncols = 30, xmn =0,
+               xmx = 30, ymn = 0, ymx = 30)
+ras2
+set.seed(99)
+ras2[] <- rnorm(ncell(ras2))
+plot(ras2)
+hist(ras2)
+```
+
+### Part c
+cell-by-cell addition of first raster and second raster
+```{r}
+ras3 <- ras + ras2
+plot(ras3)
+hist(ras3)
+```
+
+### Part d
+Calculate the mean value of the third raster
+
+reclassify the third raster(cell value 0,1)
+```{r, message=FALSE, warning=FALSE}
+if(!require(rgdal)) install.packages("rgdal")
+library(rgdal)
+```
+
+```{r}
+mean_R3 <- cellStats(ras3, "mean")
+print(mean_R3)
+ras3[ras3 > mean_R3] <- 1
+ras3[ras3 <= mean_R3] <- 0
+plot(ras3)
+writeRaster(ras3, filename = "ras3_reclassify.tiff", overwrite = TRUE)
+```
+

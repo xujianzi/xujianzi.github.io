@@ -1,0 +1,13 @@
+"0","```r
+set.seed(210)
+S_trial <- sample(c(\"boy\",\"girl\"), size = 10, replace = T, prob = c(0.515, 0.485))
+set.seed(210000)
+L_trial <- sample(c(\"boy\",\"girl\"), size = 10000, replace = T, prob = c(0.515, 0.485))
+result_2 <- cbind(table(S_trial), table(L_trial))
+colnames(result_2) <- c(\"small_trial\", \"large_trial\")
+result_2
+```"
+"1","     small_trial large_trial
+boy            8        5109
+girl           2        4891
+"
