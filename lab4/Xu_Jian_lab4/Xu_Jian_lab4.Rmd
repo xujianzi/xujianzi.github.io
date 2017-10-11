@@ -15,11 +15,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 ## Question 1
 ### Part a
-```{r}
-answer_1_a <- pnorm(20, 32, 7) + dnorm(20, 32, 7)
+```{r, message=FALSE, warning=FALSE}
+answer_1_a <- pnorm(20, 32, 7) 
 print(answer_1_a)
 ```
-The answer is **0.05635001** 
+The answer is **0.04323813** 
 
 Plot the density function
 ```{r}

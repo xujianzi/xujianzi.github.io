@@ -1,6 +1,6 @@
 ## Question 1
 ### Part a
-pnorm(20, 32, 7) + dnorm(20, 32, 7)
+pnorm(20, 32, 7) 
 #### Plot the density function
 cord.x <- c(11, seq(11, 20, 0.01), 20)
 cord.y <- c(0,dnorm(seq(11, 20, 0.01), 32,7),0)
