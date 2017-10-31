@@ -1,4 +1,0 @@
-"0","cord.x <- c(20, seq(20,40,0.01), 40)"
-"0","cord.y <- c(0, dnorm(seq(20, 40, 0.01), 32, 7), 0)"
-"0","curve(dnorm(x, 32, 7), xlim = c(11, 53), "
-"0","      main = ""A team scoring between 20 and 40 points"")"
