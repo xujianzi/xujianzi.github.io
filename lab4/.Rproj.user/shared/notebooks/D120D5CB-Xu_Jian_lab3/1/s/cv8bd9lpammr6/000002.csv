@@ -1,8 +1,0 @@
-"0","```r
-Ncar_max <- 20
-Ncar <- 0:Ncar_max
-P_car <- dpois(Ncar, lambda = 5)
-plot(Ncar, P_car, type = \"b\", pch = 16, col = \"red\")
-title(main = list(\"The Possibility of Numbers of arriving cars\", 
-                  col = \"red\", font = 3))
-```"

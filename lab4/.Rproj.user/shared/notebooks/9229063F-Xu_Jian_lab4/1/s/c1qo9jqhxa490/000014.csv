@@ -1,3 +1,0 @@
-"0","cord.x <- c(0, seq(0, 3, 0.01), 3)"
-"0","cord.y <- c(0,dexp(seq(0,3,0.01), 0.1),0)"
-"0","polygon(cord.x, cord.y, col = ""purple"")"
