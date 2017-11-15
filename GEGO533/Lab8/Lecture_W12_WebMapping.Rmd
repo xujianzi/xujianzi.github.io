@@ -1,0 +1,139 @@
+---
+title: "Web Mapping"
+author: "Dr. Qiusheng Wu"
+output: 
+  html_notebook: 
+    toc: yes
+    toc_float: yes
+---
+
+## Useful websites
+
+ * [htmlwidget for R](http://www.htmlwidgets.org/showcase_leaflet.html)
+ 
+ * [Leaflet for R](https://rstudio.github.io/leaflet/)
+ 
+ * [Leaflet basemap](http://leaflet-extras.github.io/leaflet-providers/preview/)
+ 
+ * [Leaflet Application 1](http://wetlands.io/maps/hometown.html)
+ 
+ * [Leaflet Application 2](http://wetlands.io/maps/connectivity.html)
+ 
+ 
+## Leaflet
+
+### Installation
+
+To install this R package, run this command at your R prompt:
+```{r, message=FALSE, warning=FALSE}
+if(!require(leaflet)) {install.packages("leaflet")}
+```
+
+Once installed, you can use this package at the R console, within R Markdown documents.
+
+
+### Basic Usage
+
+You create a Leaflet map with these basic steps:
+
+1. Create a map widget by calling leaflet().
+
+2. Add layers (i.e., features) to the map by using layer functions (e.g. addTiles, addMarkers, addPolygons) to modify the map widget.
+
+3. Repeat step 2 as desired.
+
+4. Print the map widget to display it.
+
+Hereâs a basic example:
+
+```{r}
+m <- leaflet(width = "100%")
+m <- addTiles(m)  # Add default OpenStreetMap map tiles
+m <- addMarkers(m, lng=-75.968342, lat=42.089026, popup="Binghamton University")
+m  # Print the map
+```
+
+
+### Pipe operator
+
+```{r}
+m <- leaflet(width = "100%") %>%
+  addTiles() %>%
+  addMarkers(m, lng=-75.968342, lat=42.089026, popup="Binghamton University")
+m
+```
+
+
+### Basemaps
+The easiest way to add tiles is by calling `addTiles()` with no arguments; by default, OpenStreetMap tiles are used.
+
+Alternatively, many popular free third-party basemaps can be added using the `addProviderTiles()` function, which is implemented using the leaflet-providers plugin. See [here](http://leaflet-extras.github.io/leaflet-providers/preview/index.html) for the complete set. 
+```{r}
+m <- leaflet(width = "100%") %>%
+  addTiles() %>%
+  addProviderTiles(provider = "Esri.WorldStreetMap",group = "World StreetMap") %>%
+  addProviderTiles(provider = "Esri.WorldImagery",group = "World Imagery") %>%
+  addProviderTiles(provider = "NASAGIBS.ViirsEarthAtNight2012",group = "Nighttime Imagery") %>%
+  addMarkers(m, lng=-75.968342, lat=42.089026, popup="Binghamton University") %>%
+  addLayersControl(
+    baseGroups = c("OSM (default)","World StreetMap", "World Imagery", "Nighttime Imagery"),
+    options = layersControlOptions(collapsed = FALSE))
+m
+```
+
+### Markers
+
+Use markers to call out points on the map. Marker locations are expressed in latitude/longitude coordinates, and can either appear as icons or as circles. You can use `SpatialPoints`, `SpatialPointsDataFrame`, or a two-column numeric matrix (first column is longitude, second column is latitude) as data objects.
+
+You can also use a data frame with latitude and longitude columns. You can explicitly tell the marker function which columns contain the coorinate data (e.g. `addMarker(lng = ~Longitude, lat = ~Latitude)`), or let the function look for columns named `lat/latitude` and `lon/lng/long/longitude` (case insensitive).
+
+#### Icon Markers
+Icon markers are added using the `addMarker` function. Their default appearance is a dropped pin. As with most layer functions, the `popup` argument can be used to add a message to be displayed on click.
+
+```{r}
+library(knitr)
+df <- quakes 
+kable(head(df,n = 10)) # display the first 10 records
+
+leaflet(data = df, width = "100%") %>% 
+  addTiles() %>%
+  addMarkers(~long, ~lat,popup = ~as.character(mag))
+```
+
+#### Marker Clusters
+
+```{r}
+df <- quakes 
+leaflet(data = df, width = "100%") %>% 
+  addTiles() %>%
+  addMarkers(~long, ~lat,popup = ~as.character(mag),clusterOptions = markerClusterOptions())
+  
+```
+
+
+## Dygraphs
+
+<http://rstudio.github.io/dygraphs>
+
+Dygraphs provides rich facilities for charting time-series data in R and includes support for many interactive features including series/point highlighting, zooming, and panning.
+
+### Installation
+```{r}
+if(!require(dygraphs)) {install.packages("dygraphs")}
+```
+
+### Basic Usage
+
+```{r}
+library(dygraphs)
+library(knitr)
+df <- nhtemp
+kable(head(df,n = 10)) ## display the first 10 records
+dygraph(nhtemp, main = "New Haven Temperatures", width = "100%") %>% 
+  dyRangeSelector(dateWindow = c("1920-01-01", "1960-01-01"))
+
+```
+
+### Example
+
+<http://wetlands.io/maps/PPR_NCDC.html>
