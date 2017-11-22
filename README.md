@@ -11,3 +11,4 @@ This is Jian Xu's first website
 5. [Lab 6(R)](http://wetlands.io/GEOG533/Labs/lab06/lab06-ANOVA.nb.html)
 6. [Lab 7](https://xujianzi.github.io/GEGO533/Lab7/Xu_Jian_lab7.nb.html)
 7. [Lab 8](https://xujianzi.github.io/GEGO533/Lab8/Xu_Jian_lab8.nb.html)
+8. [Lab 9](https://xujianzi.github.io/GEGO533/Lab9/Xu_Jian_lab9.nb.html)
