@@ -118,23 +118,33 @@ sum(pop_broome)
 Create a histogram and a boxplot of population based on census tracts of Broome County.
 ```{r}
 hist(pop_broome)
+boxplot(pop_broome)
 ```
 
 ### Question 2(f)
 Select the first five columns of the shapefile of Broome County census tract; add a new population ratio column (= census tract population / county population); save the new shapefile to the hard drive. 
 ```{r, message=FALSE, warning=FALSE}
-df_broome_sel5 <- head(df_NYtr,5)
-#df_broome_sel51 <- df_NYtr[1:5,]
-df_broome_sel5$cpop <- sum(pop_broome)
-df_broome_sel5$ratio <- df_broome_sel5$P0010001/df_broome_sel5$cpop
-df_broome_sel5
+### select 5 rows
+# df_broome_sel5 <- head(df_NYtr,5)
+# #df_broome_sel51 <- df_NYtr[1:5,]
+# df_broome_sel5$cpop <- sum(pop_broome)
+# df_broome_sel5$ratio <- df_broome_sel5$P0010001/df_broome_sel5$cpop
+# df_broome_sel5
+# shp_broome <- shp_NYtr[broome,]
+# shp_broome_sel5 <- shp_broome[1:5,]
+# shp_broome_sel5@data <- df_broome_sel5
+# if(!require(rgdal)) install.packages("rgdal")
+# library(rgdal)
+# #writeOGR(shp_broome,dsn = "output",layer = "shp_broome",driver = "ESRI Shapefile", overwrite_layer = TRUE)
+# writeOGR(shp_broome_sel5,dsn = "output",layer = "shp_broome_sel5",driver = "ESRI Shapefile", overwrite_layer = TRUE)
+dft <- shp_NYtr@data
+dfb <- dft[dft$county == "007",]
+dfs <- dfb[,1:5]
+dfs$ratio <- dfs$P0010001/sum(dfs$P0010001)
+dfs
 shp_broome <- shp_NYtr[broome,]
-shp_broome_sel5 <- shp_broome[1:5,]
-shp_broome_sel5@data <- df_broome_sel5
-if(!require(rgdal)) install.packages("rgdal")
-library(rgdal)
-#writeOGR(shp_broome,dsn = "output",layer = "shp_broome",driver = "ESRI Shapefile", overwrite_layer = TRUE)
-writeOGR(shp_broome_sel5,dsn = "output",layer = "shp_broome_sel5",driver = "ESRI Shapefile", overwrite_layer = TRUE)
+shp_broome@data <- dfs
+writeOGR(shp_broome,dsn = "output",layer = "shp_broome",driver = "ESRI Shapefile", overwrite_layer = TRUE)
 
 ```
 
