@@ -144,6 +144,8 @@ dfs$ratio <- dfs$P0010001/sum(dfs$P0010001)
 dfs
 shp_broome <- shp_NYtr[broome,]
 shp_broome@data <- dfs
+if(!require(rgdal)) install.packages("rgdal")
+library(rgdal)
 writeOGR(shp_broome,dsn = "output",layer = "shp_broome",driver = "ESRI Shapefile", overwrite_layer = TRUE)
 
 ```
