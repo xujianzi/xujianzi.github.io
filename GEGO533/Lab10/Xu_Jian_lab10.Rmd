@@ -173,9 +173,11 @@ projection(ndvi_mb)
 Aggregate all bands to generate a mean NDVI raster and a maximum NDVI raster; save the two new raster datasets to the hard drive. 
 ```{r}
 mean_ndvi <- mean(ndvi_mb)
+plot(mean_ndvi)
 max_ndvi <- max(ndvi_mb)
-writeRaster(x = mean_ndvi,filename = "mean_ndvi", overwrite = TRUE)
-writeRaster(x = max_ndvi,filename = "max_ndvi",overwrite = TRUE)
+plot(max_ndvi)
+writeRaster(x = mean_ndvi,filename = "mean_ndvi.tif", overwrite = TRUE)
+writeRaster(x = max_ndvi,filename = "max_ndvi.tif",overwrite = TRUE)
 ```
 
 ### Question 3(d)			
