@@ -1,0 +1,190 @@
+---
+title: "Using R to do Raster analysis"
+author: "Xu Jian"
+output: 
+  html_notebook:
+    toc: TRUE
+    toc_float: TRUE
+---
+
+
+
+## Description
+The data are landsat8 June to Augest one day image from 2013 to 2017.
+Choosing Binghamton as the Stuady Area
+Implement 1.Mask
+          2.Calculate NDVI
+          3.Extract Vegetation
+          4.Calculate Dense Vegetation Area
+If you want to analyze other Raster data, you just need to reset the list of the
+filepath and change the "n"
+
+## Librarys
+Using "raster","rgdal","UScensus2010","UScensus2010county","knitr"
+```{r, message=FALSE, warning=FALSE}
+if(!require(raster)){install.packages("raster")}
+library(raster)
+if(!require(rgdal)){install.packages("rgdal")}
+library(rgdal)
+if(!require(UScensus2010)) {install.packages("UScensus2010")}
+library(UScensus2010)
+if(!require(UScensus2010county)) {install.county("osx")}
+library(UScensus2010county)
+if(!require(knitr)){install.packages("knitr")}
+library(knitr)
+
+```
+
+
+## Define the function
+### NDVI function
+Define the function to calculate NDVI from land8 image
+```{r}
+ndvCalc <- function(x) {
+  ndvi <- (x[[4]] - x[[3]]) / (x[[4]] + x[[3]])
+  return(ndvi)
+}
+ndvOver <- function(x, y) {
+  ndvi <- (y - x) / (x + y)
+  return(ndvi)
+}
+```
+
+### Vegetation function
+Define the function to get the vegetation area and plot it
+```{r}
+getVegetation <- function(x){
+  x[x < 0.2] <- NA
+  return(x)
+}
+```
+
+### Dense Vegetation function
+Define the function to calculate the dense vegetation area
+```{r}
+getArea <- function(x){
+  return(sum(x[x>=0.6])*res(x)[1]^2)
+}
+```
+
+## Set work directory and list file
+```{r, message=FALSE, warning=FALSE}
+listf <- list()
+listf[1] <- "G:/R/FinalProject/data/land8_2017"
+listf[2] <- "G:/R/FinalProject/data/lan8_2016"
+listf[3] <- "G:/R/FinalProject/data/land8_2015"
+listf[4] <- "G:/R/FinalProject/data/land8_2014"
+listf[5] <- "G:/R/FinalProject/data/land8_2013"
+listp <- list()
+bandcom <- list()
+n <- 5
+for(i in 1:n){
+  setwd(listf[[i]])
+  getwd()
+  listp[[i]] <- list.files(pattern= "*.TIF",full.names=TRUE)
+  bandcom[[i]] <- stack(listp[[i]][4:9])
+}
+#### show landsat8 image in 2017 as an example
+bandcom[[1]]
+names(bandcom[[1]])
+plot(bandcom[[1]])
+```
+
+
+## Reprojection Rasters
+reproject all the Raster layers into one Projection(including extents)
+```{r}
+newbandcom <- list()
+for(i in 1:5){
+  newbandcom[[i]] <-  projectRaster(bandcom[[i]],bandcom[[1]])
+}
+
+```
+
+## Shapefile
+Get the broome county shapefile 
+```{r}
+data("new_york.county10")
+shp_NY <- new_york.county10
+df_NY <- shp_NY@data
+broome <- df_NY$NAME10 == "Broome"
+shp_Broome <- shp_NY[broome,]
+plot(shp_Broome)
+shp_Broome
+```
+
+## Reproject shapefile
+Reproject shapefile to landsat8 images
+The coordinate of shapefile is WGS84 and landsat8 imges is from UTM series 
+```{r}
+shp_BroomeUTM <- spTransform(shp_Broome, CRS(proj4string(bandcom[[1]])))
+shp_BroomeUTM 
+```
+## Raster Analysis
+### Mask
+```{r, message=FALSE, warning=FALSE}
+band_broome <- list()
+for(i in 1:n){
+  band_broome[[i]] <- mask(bandcom[[i]],shp_BroomeUTM)
+}
+#### use 2016 images as an example
+plot(band_broome[[2]],ext = shp_BroomeUTM)
+names(band_broome[[2]])
+```
+
+### NDVI
+Calculate NDVI in Broome using overlay()
+```{r, message=FALSE, warning=FALSE}
+ndvi <- list()
+for(i in 1:n){
+  ndvi[[i]] <- overlay(x=band_broome[[i]][[3]], y=band_broome[[i]][[4]], fun=ndvOver)
+}
+```
+
+### Vegetation
+Extract the NDVI > 0.2 which is sparse vegetation and dense vegetation
+```{r, message=FALSE, warning=FALSE}
+vegetation <- list()
+for(i in 1:n){
+  vegetation[[i]] <- getVegetation(ndvi[[i]])
+}
+```
+
+### Dense Vegetation Area
+Calculate the area of dense vegetation 
+```{r, message=FALSE, warning=FALSE}
+Dveg_Area <- list()
+for(i in 1:n){
+  Dveg_Area[i] <- getArea(ndvi[[i]])
+}
+area <- as.numeric(Dveg_Area)
+year <- c("2017","2016","2015","2014","2013")
+df <- data.frame(year,area)
+kable(df)
+plot(df,type = "b")
+```
+
+### Display ndvi plot and hist
+The layer1 to layer3 is 2017 to 2013
+```{r, message=FALSE, warning=FALSE}
+for(i in 1:n){
+  plot(ndvi[[i]],ext = shp_BroomeUTM)
+hist(ndvi[[i]])
+}
+```
+
+### Display vegetation
+The layer1 to layer3 is 2017 to 2015
+The layer1 to layer2 is 2014 to 2013
+```{r, message=FALSE, warning=FALSE}
+# vege_show1 <- brick(vegetation[[1]],vegetation[[2]],vegetation[[3]])
+# plot(vege_show1,ext = shp_BroomeUTM)
+# hist(vege_show1)
+# vege_show2 <- brick(vegetation[[4]],vegetation[[5]])
+# plot(vege_show2,ext = shp_BroomeUTM)
+# hist(vege_show2)
+for(i in 1:n){
+  plot(vegetation[[i]],ext = shp_BroomeUTM)
+  hist(vegetation[[i]])
+}
+```
